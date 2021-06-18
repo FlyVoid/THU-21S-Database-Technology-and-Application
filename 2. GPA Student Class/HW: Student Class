@@ -1,0 +1,194 @@
+class Student:
+    
+    def __init__(self, _name, _ID,_inputCourse=0,_sumList=0):  
+        self.name = _name          
+        self.ID = _ID
+        self.inputCourse=_inputCourse
+        self.sumList=_sumList 
+                     
+
+# 0. 输入成绩单，并存储为列表嵌套字典
+    def grade_list_input(self):
+        #分割每一个信息,存储到courseSplit
+        self.inputCourse=input('请输入你的成绩单：')
+        courseSplit=self.inputCourse.split( ) #按照空格或换行分割
+        #courseSplit=['微积分B(1)', '5', '3.0', '线性代数(1)', '4', '2.7',...]
+        #将courseSplit分离，分别存储为课程名列表，学分列表，绩点列表
+        courseList=[0 for x in range(len(courseSplit)//3)]
+        creditList_0=[0 for x in range(len(courseSplit)//3)]
+        gradeList=[0 for x in range(len(courseSplit)//3)]
+        i=0
+        for j in range(len(courseSplit)): 
+            if j%3 == 0:
+                courseList[i]=courseSplit[j] #courseList为包含所有课程名的列表
+                pass
+            elif j%3 == 1:
+                creditList_0[i]=courseSplit[j] #creditList_0为包含所有学分的列表
+                pass
+            else :
+                gradeList[i]=courseSplit[j] #gradeList为包含所有绩点的列表
+                i=i+1
+                pass
+        creditList=[int(x) for x in creditList_0] #将creditList换做int存储
+        k=0
+        for k in range(len(gradeList)):      #gradeList里如果绩点不为P/W，换用float存储 
+            if gradeList[k]=='P':
+                pass                                 
+            elif gradeList[k]=='W':
+                pass
+            elif gradeList[k]=='F':
+                pass
+            else:
+                gradeList[k]=float(gradeList[k])       
+        # 初始化sumList列表，并依次将上述三表存入
+        sumList_0=[{'课程名':0,'学分':0,'绩点':0} for x in range(len(courseSplit)//3)] 
+        i=0
+        while i<len(courseList):
+            sumList_0[i]['课程名']=courseList[i]
+            sumList_0[i]['学分']=creditList[i]
+            sumList_0[i]['绩点']=gradeList[i]
+            i=i+1
+        # sumList=[{'课程名': '微积分B(1)', '学分': 5, '绩点': 3.0,} , …]
+        self.sumList = sumList_0
+
+
+#1. 查询GPA
+    def grade_stats(self):
+        #计算总学分    
+        creditSumDelP=0
+        for i in range(len(self.sumList)):
+            if self.sumList[i]['绩点'] == 'W': #当绩点等于W时不计学分
+                pass
+            elif self.sumList[i]['绩点'] == 'P':#当绩点等于P时不计学分
+                pass
+            elif self.sumList[i]['绩点'] == 'F':#当绩点等于F时不计学分
+                pass
+            else:
+                creditSumDelP=int(self.sumList[i]['学分'])+creditSumDelP         
+        #计算绩点乘学分的乘积和            
+        gradePoint = 0
+        for i in range(len(self.sumList)):
+            if self.sumList[i]['绩点'] == 'W':
+                pass
+            elif self.sumList[i]['绩点'] == 'P':
+                pass
+            elif self.sumList[i]['绩点'] == 'F':
+                pass
+            else:
+                gradePoint=int(self.sumList[i]['学分'])*float(self.sumList[i]['绩点'])+gradePoint
+        
+        if creditSumDelP == 0:
+            print('您没有有成绩的课程，无法计算平均GPA')
+        else:
+            GPA = gradePoint/creditSumDelP
+            print("您的GPA为 %.2f " % GPA)
+            
+
+    #2. 查询总学分
+    def credit_stats(self):
+        creditSum=0
+        for i in range(len(self.sumList)):
+            if self.sumList[i]['绩点'] == 'W':    #当绩点等于W时不计学分
+                pass
+            elif self.sumList[i]['绩点'] == 'F':    #当绩点等于F时不计学分
+                pass
+            else:
+                creditSum=int(self.sumList[i]['学分'])+creditSum #累加学分
+        print('您的总学分为 %d ' % creditSum)
+
+    
+    #3. 查询绩点高于GPA的科目
+    def course_stats(self):
+        #计算总学分    
+        creditSumDelP=0
+        for i in range(len(self.sumList)):
+            if self.sumList[i]['绩点'] == 'W': #当绩点等于W时不计学分
+                pass
+            elif self.sumList[i]['绩点'] == 'P':#当绩点等于P时不计学分
+                pass
+            elif self.sumList[i]['绩点'] == 'F':#当绩点等于F时不计学分
+                pass
+            else:
+                creditSumDelP=int(self.sumList[i]['学分'])+creditSumDelP         
+        #计算绩点乘学分的乘积和            
+        gradePoint = 0
+        for i in range(len(self.sumList)):
+            if self.sumList[i]['绩点'] == 'W':
+                pass
+            elif self.sumList[i]['绩点'] == 'P':
+                pass
+            elif self.sumList[i]['绩点'] == 'F':
+                pass
+            else:
+                gradePoint=int(self.sumList[i]['学分'])*float(self.sumList[i]['绩点'])+gradePoint
+                
+        sumList_0=[0 for x in range(len(self.sumList))] #该变量是为了未来排除所有有成绩的课程成绩一样，导致输出为空的情况
+        if creditSumDelP == 0:
+            print('您没有有成绩的课程，无法查询绩点高于GPA的科目')
+        else:
+            GPA = gradePoint/creditSumDelP
+            for i in range(len(self.sumList)):
+                if self.sumList[i]['绩点'] == 'W':
+                    pass
+                elif self.sumList[i]['绩点'] == 'P':
+                    pass
+                elif self.sumList[i]['绩点'] == 'F':
+                    pass
+                elif float(self.sumList[i]['绩点']) > GPA:
+                    sumList_0[i]=self.sumList[i]
+                    print(self.sumList[i])
+                else:
+                    pass
+        
+        while creditSumDelP != 0:
+            if sumList_0==[0 for x in range(len(self.sumList))]:
+                print('您没有绩点高于GPA的科目，因为所有有成绩的课程绩点相等')
+                break
+            else:
+                break    
+
+
+
+#主程序：创建交互界面
+#输出交互界面的文字显示
+print("--------------GPA计算器加强版-----------------")
+name=input('请输入学生姓名：')
+ID=input('请输入学生学号：')
+S1 = Student(name,ID)
+print('\n')
+
+while True:
+    print('输入以下命令执行不同操作：')
+    print('0、退出')
+    print('1、输入成绩单')
+    print('2、查询GPA') 
+    print('3、查询总学分') 
+    print('4、查询绩点高于GPA的科目')    
+#输入不同数字，进入不同的函数进行操作
+    choice=int(input('您的选择（数字）：')) #注意这里要转换成int后面才能做比较
+    if choice == 0:  
+        break
+    elif choice == 1:
+        S1.grade_list_input()
+        print('\n')  
+        pass
+    elif choice == 2:
+        print('\n') 
+        S1.grade_stats()
+        print('\n')
+        pass
+    elif choice == 3:
+        print('\n') 
+        S1.credit_stats()
+        print('\n')
+        pass
+    elif choice == 4:
+        print('\n') 
+        S1.course_stats()
+        print('\n')
+        pass
+    else:
+        print('\n') 
+        print('输入错误请重新输入!') #如果输入的数字不是0123就回到原来的交互界面
+        print('\n') 
+        pass
