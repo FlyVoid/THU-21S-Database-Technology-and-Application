@@ -1,0 +1,84 @@
+# -*- coding: utf-8 -*-
+
+## 导入需要的模块
+# 提示：
+# learnTHU, json, pandas
+import pandas as pd
+import json
+import LearnTHU
+
+# 请把你的网络学堂账号密码放在一个`passport.txt`中
+# 账号在第一行，密码在第二行
+# 提交作业时不要提交`passport.txt`，不要提交！！
+with open('passport.txt', 'r') as passport:
+    userName = passport.readline().replace('\n','')
+    passWord = passport.readline()
+
+## 下载课程数据
+# 创建 session
+# 提示：learnTHU.loggedSession(userName, passWord)
+session=LearnTHU.loggedSession(userName, passWord)
+
+# 获取课程 json 数据
+# 提示：session.post(url,data = {'aoData': dataString})
+url="https://learn.tsinghua.edu.cn/b/kc/v_wlkc_search/pageList"
+dataString="[{\"name\":\"sEcho\",\"value\":2},{\"name\":\"iColumns\",\"value\":7},{\"name\":\"sColumns\",\"value\":\",,,,,,\"},{\"name\":\"iDisplayStart\",\"value\":0},{\"name\":\"iDisplayLength\",\"value\":4847},{\"name\":\"mDataProp_0\",\"value\":\"kcm\"},{\"name\":\"bSortable_0\",\"value\":true},{\"name\":\"mDataProp_1\",\"value\":\"jsmc\"},{\"name\":\"bSortable_1\",\"value\":true},{\"name\":\"mDataProp_2\",\"value\":\"xnxq\"},{\"name\":\"bSortable_2\",\"value\":true},{\"name\":\"mDataProp_3\",\"value\":\"kfyhlx\"},{\"name\":\"bSortable_3\",\"value\":true},{\"name\":\"mDataProp_4\",\"value\":\"kkdw\"},{\"name\":\"bSortable_4\",\"value\":true},{\"name\":\"mDataProp_5\",\"value\":\"xss\"},{\"name\":\"bSortable_5\",\"value\":true},{\"name\":\"mDataProp_6\",\"value\":\"lls\"},{\"name\":\"bSortable_6\",\"value\":true},{\"name\":\"iSortingCols\",\"value\":0},{\"name\":\"xnxq\",\"value\":\"2020-2021-2\"}]"
+req=session.post(url,data = {'aoData': dataString})
+
+## 处理课程数据
+# 将 json 文本转为 python 对象
+# 提示：json.loads(req.text)
+py_object = json.loads(req.text)
+
+# 可以将 python 对象存为 json 文件
+# 这样可避免每次都从服务器获取，否则会加重服务器负担（也容易被ban）
+filename='Data.json'
+with open(filename,'w') as file_obj:
+    json.dump(py_object,file_obj)
+
+
+
+
+
+
+# 获取到 python 对象的课程信息的列表（aaData）
+with open('Data.json') as file_obj:
+    Data = json.load(file_obj)
+
+# 传入这个 aaData 作为参数以创建 DataFrame
+aaData=Data['object']['aaData']
+df = pd.DataFrame(aaData)
+
+# 去除不需要的列
+# 提示：df.drop()
+df = df.drop(labels=['xnxq','wlkcid','kcflm','ggs','jxbjs','jxkjs','zys','dys','tlts','lls','jslx','kfyhlx','ywkcm','id'], axis=1) 
+
+# 改变列顺序与列名称（为了让导出的excel更易读）
+df.columns=['课程号', '课序号', '课程名称', '教师号', '教师名称', '开课单位', '学生数']
+df = df[['课程号', '课序号', '课程名称', '教师名称', '教师号', '开课单位', '学生数']]
+
+# 按院系排序
+# 提示：df.sort_values(by='开课单位',axis = 0, ascending = True)
+df = df.sort_values(by='开课单位',axis = 0, ascending = True)
+df.index = range(len(df))   #重置索引
+
+# 全部结果存为excel(xls)
+# 提示：df.to_excel('xxx.xls')
+df.to_excel('全部开课信息.xls')
+
+
+
+
+## 找出学生最多与最少的老师
+# 选出学生数最少的行，存储为dfMin
+# 选出学生数最多的行，存储为dfMax
+dfMin=df[(df['学生数']== df['学生数'].min() )]
+dfMax=df[(df['学生数'] == df['学生数'].max() )]
+
+#重置索引，更为美观
+dfMin.index = range(len(dfMin))  
+dfMax.index = range(len(dfMax))   
+
+# 把存放学生最多与最少的老师的df存为excel
+dfMin.to_excel('学生数MIN信息.xls')
+dfMax.to_excel('学生数MAX信息.xls')
