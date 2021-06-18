@@ -1,0 +1,21 @@
+class Student:
+    count = 0
+#构造函数：__init__                  #wangXM = Student('王小明',2017010123)
+    
+    def __init__(self, _name, _ID):  #这里self相当于wangXM等等
+        self.__name = _name          #实例变量self：使用的时候用wangXM.name
+        self.__ID = _ID              
+        Student.count += 1           #类变量count：使用的时候用Student.count
+
+#类方法：不需要实例化就能直接用的函数 
+    @classmethod
+    def student_num(cls):          #使用的时候用Student.student_num()
+        print('Student has created',cls.count,'students')
+
+#实例方法：需要实例化才能使用的函数
+    def get_name(self):            #使用的时候用wangXM.get_name()
+        return self.__name
+
+    def get_ID(self):              #使用的时候用wangXM.get_ID()
+        return self.__ID
+    
