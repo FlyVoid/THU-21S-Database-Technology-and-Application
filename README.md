@@ -1,2 +1,2 @@
 # Database-Technology-and-Application
-Homework and demo code for campus course, Database Technology and Application, by Prof. Li Xiu, Tsinghua University.
+数据库技术及应用，李秀，2021Spring
