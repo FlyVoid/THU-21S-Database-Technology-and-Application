@@ -1,4 +1,4 @@
-# 0. 输入成绩单，并存储为列表嵌套字典
+# 0. 输入成绩单，并存储为列表，嵌套字典
 def input_course(inputCourse):
     #分割每一个信息,存储到courseSplit
     courseSplit=inputCourse.split( ) #按照空格或换行分割
